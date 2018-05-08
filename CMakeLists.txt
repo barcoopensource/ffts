@@ -121,15 +121,16 @@ if(HAVE_DECL__MM_MALLOC)
 endif(HAVE_DECL__MM_MALLOC)
 
 # check existence of various functions
-check_function_exists(aligned_alloc  HAVE_ALIGNED_ALLOC)
+#check_function_exists(aligned_alloc  HAVE_ALIGNED_ALLOC)
 check_function_exists(memalign       HAVE_MEMALIGN)
 check_function_exists(posix_memalign HAVE_POSIX_MEMALIGN)
 check_function_exists(valloc         HAVE_VALLOC)
 check_function_exists(_mm_malloc     HAVE__MM_MALLOC)
 
-if(HAVE_ALIGNED_ALLOC)
-  add_definitions(-DHAVE_ALIGNED_ALLOC)
-endif(HAVE_ALIGNED_ALLOC)
+
+#if(HAVE_ALIGNED_ALLOC)
+#  add_definitions(-DHAVE_ALIGNED_ALLOC)
+#endif(HAVE_ALIGNED_ALLOC)
 
 if(HAVE_MEMALIGN)
   add_definitions(-DHAVE_MEMALIGN)
