@@ -7,6 +7,8 @@ set(FFTS_MAJOR 0)
 set(FFTS_MINOR 9)
 set(FFTS_MICRO 0)
 
+enable_language(ASM)
+
 set(FFTS_VERSION "ffts-${FFTS_MAJOR}.${FFTS_MINOR}.${FFTS_MICRO}")
 
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
