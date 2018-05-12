@@ -1,13 +1,11 @@
-#cmake_minimum_required(VERSION 2.8.12 FATAL_ERROR)
+cmake_minimum_required(VERSION 2.8.12 FATAL_ERROR)
 
-#project(ffts C ASM)
+project(ffts C ASM)
 
 # TODO: to support AutoConfigure building, this should came from "template" file
 set(FFTS_MAJOR 0)
 set(FFTS_MINOR 9)
 set(FFTS_MICRO 0)
-
-enable_language(ASM)
 
 set(FFTS_VERSION "ffts-${FFTS_MAJOR}.${FFTS_MINOR}.${FFTS_MICRO}")
 
@@ -47,6 +45,19 @@ option(ENABLE_SHARED
 option(ENABLE_STATIC
   "Enable building a static library." ON
 )
+
+if(${BARCO_FFTS_FORCE_VFP})
+    set(GENERATE_POSITION_INDEPENDENT_CODE ON)
+    set(VFP_SUPPORTED                      ON)
+    set(ENABLE_VFP                         ON)
+    set(DISABLE_DYNAMIC_CODE               OFF)
+endif()
+
+if(${BARCO_FFTS_FORCE_NEON})
+    set(GENERATE_POSITION_INDEPENDENT_CODE ON)
+    set(ENABLE_NEON                        ON)
+    set(DISABLE_DYNAMIC_CODE               OFF)
+endif()
 
 include(CheckCSourceCompiles)
 include(CheckCSourceRuns)
@@ -128,7 +139,6 @@ check_function_exists(memalign       HAVE_MEMALIGN)
 check_function_exists(posix_memalign HAVE_POSIX_MEMALIGN)
 check_function_exists(valloc         HAVE_VALLOC)
 check_function_exists(_mm_malloc     HAVE__MM_MALLOC)
-
 
 #if(HAVE_ALIGNED_ALLOC)
 #  add_definitions(-DHAVE_ALIGNED_ALLOC)
@@ -503,37 +513,37 @@ if(ENABLE_SHARED)
   install( TARGETS ffts_shared DESTINATION ${LIB_INSTALL_DIR} )
 endif(ENABLE_SHARED)
 
-#if(ENABLE_STATIC)
-#  add_library(ffts_static STATIC
-#    ${FFTS_HEADERS}
-#    ${FFTS_SOURCES}
-#  )
+if(ENABLE_STATIC)
+  add_library(ffts_static STATIC
+    ${FFTS_HEADERS}
+    ${FFTS_SOURCES}
+  )
 
-#  if(UNIX)
-#    # On unix-like platforms the library is called "libffts.a"
-#    set_target_properties(ffts_static PROPERTIES OUTPUT_NAME ffts)
-#  endif(UNIX)
+  if(UNIX)
+    # On unix-like platforms the library is called "libffts.a"
+    set_target_properties(ffts_static PROPERTIES OUTPUT_NAME ffts)
+  endif(UNIX)
 
-#  install( TARGETS ffts_static DESTINATION ${LIB_INSTALL_DIR} )
-#endif(ENABLE_STATIC)
+  install( TARGETS ffts_static DESTINATION ${LIB_INSTALL_DIR} )
+endif(ENABLE_STATIC)
 
-# if(ENABLE_STATIC OR ENABLE_SHARED)
-  # add_executable(ffts_test
-    # tests/test.c
-  # )
+if(ENABLE_STATIC OR ENABLE_SHARED)
+  add_executable(ffts_test
+    tests/test.c
+  )
 
-   # link with static library by default
-  # if(ENABLE_STATIC)
-    # add_library(ffts ALIAS ffts_static)
-  # else()
-    # add_library(ffts ALIAS ffts_shared)
-  # endif(ENABLE_STATIC)
+  # link with static library by default
+  if(ENABLE_STATIC)
+    add_library(ffts ALIAS ffts_static)
+  else()
+    add_library(ffts ALIAS ffts_shared)
+  endif(ENABLE_STATIC)
 
-  # target_link_libraries(ffts_test
-    # ffts
-    # ${FFTS_EXTRA_LIBRARIES}
-  # )
-# endif(ENABLE_STATIC OR ENABLE_SHARED)
+  target_link_libraries(ffts_test
+    ffts
+    ${FFTS_EXTRA_LIBRARIES}
+  )
+endif(ENABLE_STATIC OR ENABLE_SHARED)
 
 # generate packageconfig file
 if(UNIX)
@@ -550,17 +560,6 @@ if(UNIX)
   endif(PKG_CONFIG_FOUND)
 endif(UNIX)
 
-if(ENABLE_STATIC)
-  add_barco_library(3rdFfts STATIC
-                    "${FFTS_SOURCES}"
-                    "${FFTS_HEADERS}"
-                    "${Barco_INCLUDE_DIR_INTERN}/lib3rdFfts")
-
-  set_property(
-      TARGET 3rdFfts
-      PROPERTY ARCHIVE_OUTPUT_DIRECTORY "${Barco_LIBRARY_DIR_INTERN}")
-endif(ENABLE_STATIC)
-    
-#install( FILES
-#    ${FFTS_HEADERS}
-#  DESTINATION ${INCLUDE_INSTALL_DIR} )
+install( FILES
+    ${FFTS_HEADERS}
+  DESTINATION ${INCLUDE_INSTALL_DIR} )
