@@ -392,11 +392,11 @@ elseif(CMAKE_COMPILER_IS_GNUCC)
   set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra")
 
   # check if we can control visibility of symbols
-  #check_c_compiler_flag(-fvisibility=hidden HAVE_GCC_VISIBILITY)
-  #if(HAVE_GCC_VISIBILITY)
-  #  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fvisibility=hidden")
-  #  add_definitions(-DHAVE_GCC_VISIBILITY)
-  #endif(HAVE_GCC_VISIBILITY)
+  check_c_compiler_flag(-fvisibility=hidden HAVE_GCC_VISIBILITY)
+  if(HAVE_GCC_VISIBILITY)
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fvisibility=hidden")
+    add_definitions(-DHAVE_GCC_VISIBILITY)
+  endif(HAVE_GCC_VISIBILITY)
 
   # some systems need libm for the math functions to work
   check_library_exists(m pow "" HAVE_LIBM)
