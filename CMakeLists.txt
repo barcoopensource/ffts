@@ -398,6 +398,19 @@ if(MSVC)
     endforeach()
   endif(FFTS_STATIC_CRT)
 
+  foreach (flag_var
+           CMAKE_C_FLAGS_DEBUG
+           CMAKE_CXX_FLAGS
+           CMAKE_CXX_FLAGS_DEBUG
+           CMAKE_CXX_FLAGS_RELWITHDEBINFO)
+
+    # We want the debugging information always to be included into the object files
+    # Replaces /Zi and /ZI with /Z7 in defaults.
+    string(REPLACE "/Zi" "/Z7" ${flag_var} "${${flag_var}}")
+    string(REPLACE "/ZI" "" ${flag_var} "${${flag_var}}")
+
+  endforeach()
+
   add_definitions(-D_USE_MATH_DEFINES)
 elseif(CMAKE_COMPILER_IS_GNUCC)
   include(CheckCCompilerFlag)
