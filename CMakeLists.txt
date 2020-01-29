@@ -46,6 +46,10 @@ option(ENABLE_STATIC
   "Enable building a static library." ON
 )
 
+option(ENABLE_TEST
+  "Enable building the test executable" ON
+)
+
 if (WIN32)
   option(FFTS_STATIC_CRT "Link the static CRT libraries" OFF )
 endif(WIN32)
@@ -555,7 +559,7 @@ if(ENABLE_STATIC)
   install( TARGETS ffts_static DESTINATION ${LIB_INSTALL_DIR} )
 endif(ENABLE_STATIC)
 
-if(ENABLE_STATIC OR ENABLE_SHARED)
+if(ENABLE_TEST)
   add_executable(ffts_test
     tests/test.c
   )
