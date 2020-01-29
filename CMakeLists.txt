@@ -575,7 +575,7 @@ if(ENABLE_TEST)
     ffts
     ${FFTS_EXTRA_LIBRARIES}
   )
-endif(ENABLE_STATIC OR ENABLE_SHARED)
+endif(ENABLE_TEST)
 
 # generate packageconfig file
 if(UNIX)
