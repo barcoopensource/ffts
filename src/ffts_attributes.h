@@ -46,6 +46,13 @@
 #define GCC_VERSION_AT_LEAST(x,y) 0
 #endif
 
+#ifdef __clang_major__
+#define CLANG_VERSION_AT_LEAST(x, y)                                           \
+  (__clang_major__ > x || __clang_major__ == x && __clang_minor__ >= y)
+#else
+#define CLANG_VERSION_AT_LEAST(x, y) 0
+#endif
+
 #ifdef __GNUC__
 #define FFTS_ALIGN(x) __attribute__((aligned(x)))
 #elif defined(_MSC_VER)

@@ -120,6 +120,8 @@ ffts_flush_instruction_cache(void *start, size_t length)
 #elif __linux__
 #if GCC_VERSION_AT_LEAST(4,3)
     __builtin___clear_cache(start, (char*) start + length);
+#elif CLANG_VERSION_AT_LEAST(16, 0)
+    __builtin___clear_cache(start, (char *)start + length);
 #elif __GNUC__
     __clear_cache((long) start, (long) start + length);
 #endif
